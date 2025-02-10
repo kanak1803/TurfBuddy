@@ -2,6 +2,7 @@ import express, { Application } from "express";
 import dotenv from "dotenv";
 import cors from "cors";
 import connectDB from "./config/db";
+import userRoutes from "./routes/userRoutes";
 
 dotenv.config();
 connectDB();
@@ -12,6 +13,8 @@ const app: Application = express();
 app.use(express.json());
 app.use(cors());
 
+console.log("User routes loaded");
+app.use("/api/users", userRoutes);
 app.get("/", (req, res) => {
   res.send("Turfbuddy is running...");
 });
