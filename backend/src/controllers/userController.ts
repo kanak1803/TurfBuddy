@@ -3,6 +3,16 @@ import { Request, Response } from "express";
 import jwt from "jsonwebtoken";
 import User from "../models/User";
 
+const generateToken = (userId: string) => {
+  return jwt.sign(
+    { userId: userId.toString() },
+    process.env.JWT_SECRET as string,
+    {
+      expiresIn: "30d",
+    }
+  );
+};
+
 export const registerUser = async (
   req: Request,
   res: Response
@@ -49,11 +59,16 @@ export const registerUser = async (
 
     await newUser.save();
     //creating JWT token
-    const token = jwt.sign(
-      { userId: newUser._id },
-      process.env.JWT_SECRET as string,
-      { expiresIn: "30d" }
-    );
+    const token = generateToken(newUser._id.toString());
+
+    //set token in httpOnly cookie
+    res.cookie("jwt", token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "strict",
+      maxAge: 30 * 24 * 60 * 60 * 1000,
+    });
+
     res.status(201).json({
       message: "User registered successfully",
       user: {
@@ -89,11 +104,15 @@ export const loginUser = async (req: Request, res: Response): Promise<void> => {
       return;
     }
     //generate jwt token
-    const token = jwt.sign(
-      { userId: userExist._id },
-      process.env.JWT_SECRET as string,
-      { expiresIn: "30d" }
-    );
+    const token = generateToken(userExist._id.toString());
+
+    //set token in httpOnly cookie
+    res.cookie("jwt", token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "strict",
+      maxAge: 30 * 24 * 60 * 60 * 1000,
+    });
 
     res.status(200).json({
       message: "Login successfully",
@@ -110,4 +129,9 @@ export const loginUser = async (req: Request, res: Response): Promise<void> => {
     console.error("Login Error:", error);
     res.status(500).json({ message: "Internal Server Error" });
   }
+};
+
+export const logoutUser = (req: Request, res: Response): void => {
+  res.cookie("jwt", "", { httpOnly: true, expires: new Date(0) });
+  res.status(200).json({ message: "Logout Successfully" });
 };
