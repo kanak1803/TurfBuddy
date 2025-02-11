@@ -2,6 +2,7 @@ import bcrypt from "bcryptjs";
 import { Request, Response } from "express";
 import jwt from "jsonwebtoken";
 import User from "../models/User";
+import { AuthRequest } from "../middleware/authMiddleware";
 
 const generateToken = (userId: string) => {
   return jwt.sign(
@@ -134,4 +135,17 @@ export const loginUser = async (req: Request, res: Response): Promise<void> => {
 export const logoutUser = (req: Request, res: Response): void => {
   res.cookie("jwt", "", { httpOnly: true, expires: new Date(0) });
   res.status(200).json({ message: "Logout Successfully" });
+};
+
+export const getUserProfile = async (
+  req: AuthRequest,
+  res: Response
+): Promise<void> => {
+  try {
+    //check middleware to know how profile is fetching 
+    res.json(req.user);
+  } catch (error) {
+    console.log("server unable to find user", error);
+    res.status(500).json({ message: "Server error" });
+  }
 };

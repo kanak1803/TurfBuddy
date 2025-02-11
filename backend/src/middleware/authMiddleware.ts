@@ -1,7 +1,8 @@
 import { NextFunction, Request, Response } from "express";
 import jwt from "jsonwebtoken";
+import User from "../models/User";
 
-interface AuthRequest extends Request {
+export interface AuthRequest extends Request {
   user?: any;
 }
 
@@ -20,14 +21,20 @@ export const protectRoute = async (
     }
 
     // verfiy token
-    const decoded = jwt.verify(token, process.env.JWT_SECRET as string);
+    const decoded: any = jwt.verify(token, process.env.JWT_SECRET!);
 
     //check if token is valid
     if (!decoded) {
       res.status(401).json({ message: "Unauthorized - Invalid token" });
       return;
     }
-    req.user = decoded;
+    const user = await User.findById(decoded.userId).select("-password");
+    if (!user) {
+      res.status(401).json({ message: "Not authorized, user not found" });
+      return;
+    }
+    req.user = user;
+    next();
   } catch (error) {
     console.error("Auth Middleware Error:", error);
     res.status(401).json({ message: "Not authorized, invalid token" });
