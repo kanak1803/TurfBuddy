@@ -165,3 +165,40 @@ export const joinGame = async (
     res.status(500).json({ message: "Server error" });
   }
 };
+
+export const deleteGame = async (
+  req: AuthRequest,
+  res: Response
+): Promise<void> => {
+  try {
+    const { id } = req.params;
+    const userId = req.user._id;
+
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      res.status(400).json({ message: "Invalid game ID" });
+      return;
+    }
+
+    //find the game
+    const game = await Game.findById(id);
+    if (!game) {
+      res.status(404).json({ message: "Game not found" });
+      return;
+    }
+
+    //check if user logged in is the host of the game
+    if (game.host.toString() !== userId.toString()) {
+      res
+        .status(403)
+        .json({ message: "You dont have authorization to delete this game" });
+      return;
+    }
+
+    //delete the game
+    await Game.findByIdAndDelete(id);
+    res.status(200).json({ message: "Game deleted successfully" });
+  } catch (error) {
+    console.error("Error deleting game:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+};
