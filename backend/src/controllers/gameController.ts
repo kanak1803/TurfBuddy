@@ -105,3 +105,63 @@ export const getSingleGame = async (
     res.status(500).json({ message: "Server error" });
   }
 };
+
+export const joinGame = async (
+  req: AuthRequest,
+  res: Response
+): Promise<void> => {
+  try {
+    const { id } = req.params;
+    const userId = req.user._id;
+
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      res.status(400).json({ message: "Invalid game ID cannot join" });
+      return;
+    }
+    //find the game
+    const game = await Game.findById(id);
+    if (!game) {
+      res.status(404).json({ message: "Game not found" });
+      return;
+    }
+
+    //not able to join host his own game
+
+    if (game.host.toString() === userId.toString()) {
+      res.status(400).json({ message: "You cannnot join your own game" });
+      return;
+    }
+
+    if (game.playerJoined.includes(userId)) {
+      res.status(400).json({ message: "You have already joined this Game" });
+      return;
+    }
+
+    //check if game is alread full
+    if (game.playerJoined.length >= game.playerNeeded) {
+      res.status(400).json({ message: "Game is full,no player can join now" });
+      return;
+    }
+
+    game.playerJoined.push(userId);
+    if (game.playerJoined.length >= game.playerNeeded) {
+      game.status = "full";
+    }
+    await game.save();
+    const updatedGame = await Game.findById(id)
+      .populate({
+        path: "host",
+        select: "name email contactNumber",
+        model: "User",
+      })
+      .populate({
+        path: "playerJoined",
+        select: "name email contactNumber",
+        model: "User",
+      });
+    res.status(200).json(updatedGame);
+  } catch (error) {
+    console.error("Error joining game:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+};
