@@ -202,3 +202,51 @@ export const deleteGame = async (
     res.status(500).json({ message: "Server error" });
   }
 };
+
+export const leaveGame = async (
+  req: AuthRequest,
+  res: Response
+): Promise<void> => {
+  try {
+    const { id } = req.params;
+    const userId = req.user._id;
+
+    //find the game
+    const game = await Game.findById(id);
+    if (!game) {
+      res.status(404).json({ message: "Game not found" });
+      return;
+    }
+
+    //prevent host from leaving the game
+    if (game.host.toString() === userId.toString()) {
+      res.status(400).json({ message: "Host cannot leave their own game" });
+      return;
+    }
+
+    //check if user is in has join the game
+    const playerIndex = game.playerJoined.findIndex(
+      (player) => player.toString() === userId.toString()
+    );
+    if (playerIndex === -1) {
+      res.status(400).json({ message: "You are not part of this game" });
+      return;
+    }
+
+    //remove player from the list
+    game.playerJoined.splice(playerIndex, 1);
+
+    if (
+      game.status === "full" &&
+      game.playerJoined.length < game.playerNeeded
+    ) {
+      game.status = "open";
+    }
+    await game.save();
+
+    res.status(200).json({ message: "You have left the game", game });
+  } catch (error) {
+    console.error("Error leaving game:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+};
