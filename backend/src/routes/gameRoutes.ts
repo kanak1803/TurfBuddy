@@ -6,6 +6,7 @@ import {
   getSingleGame,
   joinGame,
   leaveGame,
+  updateGame,
 } from "../controllers/gameController";
 import { protectRoute } from "../middleware/authMiddleware";
 
@@ -17,5 +18,6 @@ router.get("/:id", getSingleGame);
 router.post("/joingame/:id", protectRoute, joinGame);
 router.post("/deletegame/:id", protectRoute, deleteGame);
 router.post("/leavegame/:id", protectRoute, leaveGame);
+router.post("/updategame/:id", protectRoute, updateGame);
 
 export default router;

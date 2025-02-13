@@ -250,3 +250,40 @@ export const leaveGame = async (
     res.status(500).json({ message: "Server error" });
   }
 };
+
+export const updateGame = async (
+  req: AuthRequest,
+  res: Response
+): Promise<void> => {
+  try {
+    const { id } = req.params;
+    const userId = req.user._id;
+    const updateFields = req.body;
+
+    //find the game
+    const game = await Game.findById(id);
+    if (!game) {
+      res.status(404).json({ message: "Game not found" });
+      return;
+    }
+
+    //allow only host to update the game details
+    if (game.host.toString() !== userId.toString()) {
+      res
+        .status(400)
+        .json({ message: "Your are not authorized to update game details" });
+      return;
+    }
+
+    //prevent updating restricted Fields
+    const restrictedFields = ["host", "playerJoined", "status"];
+    restrictedFields.forEach((field) => delete updateFields[field]);
+
+    Object.assign(game, updateFields);
+    await game.save();
+    res.status(200).json({ message: "Game updated successfully", game });
+  } catch (error) {
+    console.error("Error updating game:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+};
