@@ -9,34 +9,33 @@ import React from "react";
 
 const Navbar = () => {
   return (
-    <nav className="w-full border-b p-4 shadow-md bg-white">
+    <nav className="bg-secondary text-secondary-foreground p-4">
       <div className="container mx-auto flex justify-between items-center">
         <Link href={"/"} className="text-xl font-bold">
           TrufBuddy
         </Link>
+
         <NavigationMenu>
           <NavigationMenuList className="flex space-x-4">
             <NavigationMenuItem>
-              <Link href={"/"} className="text-gray-700 hover:text-black">
+              <Link href={"/"} className="hover:text-primary transition">
                 Home
               </Link>
             </NavigationMenuItem>
             <NavigationMenuItem>
-              <Link href={"/games"} className="text-gray-700 hover:text-black">
+              <Link href={"/games"} className="hover:text-primary transition">
                 Games
               </Link>
             </NavigationMenuItem>
             <NavigationMenuItem>
-              <Link
-                href={"/profile"}
-                className="text-gray-700 hover:text-black"
-              >
+              <Link href={"/profile"} className="hover:text-primary transition">
                 Profile
               </Link>
             </NavigationMenuItem>
           </NavigationMenuList>
         </NavigationMenu>
-        <Button asChild>
+
+        <Button variant="default" asChild>
           <Link href={"/login"}>Login</Link>
         </Button>
       </div>
