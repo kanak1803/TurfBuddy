@@ -142,10 +142,26 @@ export const getUserProfile = async (
   res: Response
 ): Promise<void> => {
   try {
-    //check middleware to know how profile is fetching 
+    //check middleware to know how profile is fetching
     res.json(req.user);
   } catch (error) {
     console.log("server unable to find user", error);
     res.status(500).json({ message: "Server error" });
+  }
+};
+
+export const checkAuth = async (req: Request, res: Response): Promise<void> => {
+  const token = req.cookies.jwt;
+  if (!token) {
+    res.status(401).json({ authenticated: false, message: "No token found" });
+    return;
+  }
+
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET as string);
+    res.json({ authenticated: true, user: decoded });
+  } catch (error) {
+    console.log(error);
+    res.status(401).json({ authenticated: false, message: "Invalid token" });
   }
 };
