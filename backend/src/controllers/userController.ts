@@ -151,7 +151,7 @@ export const getUserProfile = async (
 };
 
 export const checkAuth = async (req: Request, res: Response): Promise<void> => {
-  const token = req.cookies.jwt;
+  const token = req.cookies?.jwt;
   if (!token) {
     res.status(401).json({ authenticated: false, message: "No token found" });
     return;
@@ -161,7 +161,7 @@ export const checkAuth = async (req: Request, res: Response): Promise<void> => {
     const decoded = jwt.verify(token, process.env.JWT_SECRET as string);
     res.json({ authenticated: true, user: decoded });
   } catch (error) {
-    console.log(error);
+    console.error("JWT Verification Error:", error);
     res.status(401).json({ authenticated: false, message: "Invalid token" });
   }
 };

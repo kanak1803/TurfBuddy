@@ -35,6 +35,7 @@ export const protectRoute = async (
     }
     req.user = user;
     next();
+   
   } catch (error) {
     console.error("Auth Middleware Error:", error);
     res.status(401).json({ message: "Not authorized, invalid token" });

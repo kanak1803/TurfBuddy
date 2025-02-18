@@ -12,8 +12,10 @@ import {
 } from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
+import { useAuthStore } from "@/store/authStore";
+import { useRouter } from "next/navigation";
 
 const formSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 character"),
@@ -29,6 +31,15 @@ const RegisterForm = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
+  const router = useRouter();
+  const { isAuthenticated, checkAuth } = useAuthStore();
+
+  useEffect(() => {
+    checkAuth();
+    if (isAuthenticated) {
+      router.replace("/");
+    }
+  }, [isAuthenticated, checkAuth, router]);
 
   const form = useForm({
     resolver: zodResolver(formSchema),

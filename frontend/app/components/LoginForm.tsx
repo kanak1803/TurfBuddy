@@ -12,9 +12,11 @@ import {
 } from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { useState } from "react";
-import axios from "axios";
+import { useEffect, useState } from "react";
+import axios, { AxiosError } from "axios";
 import { useRouter } from "next/navigation";
+import { useAuthStore } from "@/store/authStore";
+import { Loader } from "lucide-react";
 
 const formSchema = z.object({
   email: z.string().email("Invalid email"),
@@ -26,6 +28,14 @@ const LoginForm = () => {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const router = useRouter();
+  const { isAuthenticated, checkAuth } = useAuthStore();
+
+  useEffect(() => {
+    checkAuth();
+    if (isAuthenticated) {
+      router.replace("/");
+    }
+  }, [isAuthenticated, checkAuth, router]);
 
   const form = useForm({
     resolver: zodResolver(formSchema),
@@ -50,10 +60,17 @@ const LoginForm = () => {
       console.log(response);
       setSuccess("Login successful! You can now join or create games.");
       form.reset();
-      router.push("/");
-    } catch (error) {
-      console.log(error);
-      setError("Login Failed failed");
+      setTimeout(() => {
+        router.replace("/");
+        window.location.reload();
+      }, 500);
+    } catch (err) {
+      console.log(err);
+      if (err instanceof AxiosError && err.response) {
+        setError(err.response.data?.message || "Login failed");
+      } else {
+        setError("An unexpected error occurred");
+      }
     } finally {
       setLoading(false);
     }
@@ -106,7 +123,7 @@ const LoginForm = () => {
             className="btn-primary w-full"
             disabled={loading}
           >
-            {loading ? "Loggining..." : "LogIn"}
+            {loading ? "Logging in..." : "LogIn"}
           </Button>
         </form>
       </Form>
