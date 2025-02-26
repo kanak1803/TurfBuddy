@@ -33,7 +33,7 @@ const Navbar = () => {
           ) : (
             <>
               <Button variant="default" asChild>
-                <Link href={"/game"}>Games</Link>
+                <Link href={"/"}>Games</Link>
               </Button>
               <Button variant="default" asChild>
                 <Link href={"/login"}>Login</Link>

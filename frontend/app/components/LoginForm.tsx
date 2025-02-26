@@ -16,7 +16,6 @@ import { useEffect, useState } from "react";
 import axios, { AxiosError } from "axios";
 import { useRouter } from "next/navigation";
 import { useAuthStore } from "@/store/authStore";
-import { Loader } from "lucide-react";
 
 const formSchema = z.object({
   email: z.string().email("Invalid email"),

@@ -5,11 +5,12 @@ interface AuthState {
   isAuthenticated: boolean | null;
   checkAuth: () => Promise<void>;
   logout: () => Promise<void>;
-  
+  isCheckingAuth: boolean;
 }
 
 export const useAuthStore = create<AuthState>((set) => ({
   isAuthenticated: null,
+  isCheckingAuth: true,
   checkAuth: async () => {
     try {
       const response = await axios.get(
@@ -22,6 +23,8 @@ export const useAuthStore = create<AuthState>((set) => ({
     } catch (error) {
       console.log(error);
       set({ isAuthenticated: false });
+    } finally {
+      set({ isCheckingAuth: false });
     }
   },
   logout: async () => {

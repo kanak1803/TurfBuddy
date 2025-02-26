@@ -4,7 +4,7 @@ const API_URL = "http://localhost:5001/api";
 
 export const fetchGames = async () => {
   const response = await axios.get(`${API_URL}/games`);
-  return response.data;
+  return response.data.games;
 };
 
 export const fetchSingleGame = async (id: string) => {
