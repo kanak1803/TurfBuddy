@@ -7,6 +7,8 @@ import Image from "next/image";
 import React, { FC, useState } from "react";
 import JoinGameModal from "./JoinGameModal";
 import { IGame } from "@/types/game";
+import { useAuthStore } from "@/store/authStore";
+import { toast } from "sonner";
 
 interface GameCardProps {
   game: IGame;
@@ -21,6 +23,14 @@ const sportImages: Record<string, string> = {
 };
 
 export const GameCard: FC<GameCardProps> = ({ game }) => {
+  const { isAuthenticated } = useAuthStore();
+  const handleOpenModal = () => {
+    if (!isAuthenticated) {
+      toast.error("You need to log in to join a game!");
+      return;
+    }
+    setIsModalOpen(true);
+  };
   const [isModalOpen, setIsModalOpen] = useState(false);
   return (
     <Card>
@@ -56,7 +66,7 @@ export const GameCard: FC<GameCardProps> = ({ game }) => {
         </Badge>
         {/* Join Button (only if game is open) */}
         {game.status === "open" && (
-          <Button onClick={() => setIsModalOpen(true)} className="mt-4 w-full">
+          <Button onClick={handleOpenModal} className="mt-4 w-full">
             Join Game
           </Button>
         )}

@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 
 const API_URL = "http://localhost:5001/api";
 
@@ -13,6 +13,19 @@ export const fetchSingleGame = async (id: string) => {
 };
 
 export const joinGame = async (gameId: string) => {
-  const response = await axios.post(`${API_URL}/games/joingame/${gameId}`);
-  return response.data;
+  try {
+    const response = await axios.post(
+      `${API_URL}/games/joingame/${gameId}`,
+      {},
+      { withCredentials: true } // Ensure auth cookies are included
+    );
+    return response.data;
+  } catch (error) {
+    if (error instanceof AxiosError) {
+      throw new Error(
+        error.response?.data?.message || "Failed to join the game."
+      );
+    }
+    throw new Error("An unexpected error occurred.");
+  }
 };

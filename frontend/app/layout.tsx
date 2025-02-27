@@ -4,6 +4,7 @@ import "./globals.css";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { queryClient } from "@/lib/queryClient";
 import Navbar from "./components/Navbar";
+import { Toaster } from "@/components/ui/sonner";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -33,6 +34,7 @@ export default function RootLayout({
         <QueryClientProvider client={queryClient}>
           <Navbar />
           <main className="container mx-auto p-4">{children}</main>
+          <Toaster/>
         </QueryClientProvider>
       </body>
     </html>
