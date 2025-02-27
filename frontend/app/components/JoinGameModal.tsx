@@ -13,7 +13,6 @@ import { joinGame } from "@/services/api";
 import { useAuthStore } from "@/store/authStore";
 import { IGame } from "@/types/game";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { AxiosError } from "axios";
 
 import React from "react";
 import { toast } from "sonner";
@@ -37,8 +36,8 @@ const JoinGameModal: React.FC<GameModalProps> = ({ game, isOpen, onClose }) => {
       queryClient.invalidateQueries({ queryKey: ["games"] });
       onClose();
     },
-    onError: (error: AxiosError<{ message?: string }>) => {
-      toast.error(error.response?.data?.message || "Failed to join the game.");
+    onError: (error: Error) => {
+      toast.error(error.message || "Failed to join game"); // For standard JavaScript errors
     },
   });
 
@@ -77,7 +76,7 @@ const JoinGameModal: React.FC<GameModalProps> = ({ game, isOpen, onClose }) => {
           {isAuthenticated && (
             <Button
               onClick={() => handleJoin()}
-              disabled={isPending || game.playerJoined.includes("USER_ID")}
+              disabled={isPending}
               className="bg-green-500 text-white"
             >
               {isPending ? "Joining..." : "Join Game"}

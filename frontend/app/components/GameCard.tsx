@@ -23,7 +23,10 @@ const sportImages: Record<string, string> = {
 };
 
 export const GameCard: FC<GameCardProps> = ({ game }) => {
-  const { isAuthenticated } = useAuthStore();
+  const { isAuthenticated, userId } = useAuthStore();
+  const hasJoined = userId
+    ? game.playerJoined.some((player) => player._id === userId)
+    : false;
   const handleOpenModal = () => {
     if (!isAuthenticated) {
       toast.error("You need to log in to join a game!");
@@ -66,8 +69,12 @@ export const GameCard: FC<GameCardProps> = ({ game }) => {
         </Badge>
         {/* Join Button (only if game is open) */}
         {game.status === "open" && (
-          <Button onClick={handleOpenModal} className="mt-4 w-full">
-            Join Game
+          <Button
+            onClick={handleOpenModal}
+            className="mt-4 w-full"
+            disabled={hasJoined}
+          >
+            {hasJoined ? "Already Joined" : "Join Game"}
           </Button>
         )}
         <JoinGameModal

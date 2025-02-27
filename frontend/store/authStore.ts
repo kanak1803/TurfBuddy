@@ -3,6 +3,7 @@ import { create } from "zustand";
 
 interface AuthState {
   isAuthenticated: boolean | null;
+  userId: string | null;
   checkAuth: () => Promise<void>;
   logout: () => Promise<void>;
   isCheckingAuth: boolean;
@@ -10,6 +11,7 @@ interface AuthState {
 
 export const useAuthStore = create<AuthState>((set) => ({
   isAuthenticated: null,
+  userId: null,
   isCheckingAuth: true,
   checkAuth: async () => {
     try {
@@ -19,14 +21,18 @@ export const useAuthStore = create<AuthState>((set) => ({
           withCredentials: true,
         }
       );
-      set({ isAuthenticated: response.data.authenticated });
+      set({
+        isAuthenticated: response.data.authenticated,
+        userId: response.data.user?.userId,
+      });
     } catch (error) {
       console.log(error);
-      set({ isAuthenticated: false });
+      set({ isAuthenticated: false, userId: null });
     } finally {
       set({ isCheckingAuth: false });
     }
   },
+
   logout: async () => {
     try {
       await axios.post(
@@ -34,7 +40,7 @@ export const useAuthStore = create<AuthState>((set) => ({
         {},
         { withCredentials: true }
       );
-      set({ isAuthenticated: false });
+      set({ isAuthenticated: false, userId: null });
     } catch (error) {
       console.log("Logout failed", error);
     }
