@@ -1,11 +1,13 @@
 "use client";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useAuthStore } from "@/store/authStore";
+import CreateGameModal from "./CreateGameModal";
 
 const Navbar = () => {
   const { isAuthenticated, checkAuth, logout } = useAuthStore();
+  const [openModal, setOpenModal] = useState(false);
 
   useEffect(() => {
     checkAuth();
@@ -23,6 +25,10 @@ const Navbar = () => {
         <div className="flex space-x-2">
           {isAuthenticated ? (
             <>
+              <Button onClick={() => setOpenModal(true)} variant="default">
+                + Create Game
+              </Button>
+              <CreateGameModal open={openModal} setOpen={setOpenModal} />
               <Button variant="default" asChild>
                 <Link href={"/profile"}>Profile</Link>
               </Button>

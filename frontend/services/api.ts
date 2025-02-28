@@ -29,3 +29,25 @@ export const joinGame = async (gameId: string) => {
     throw new Error("An unexpected error occurred.");
   }
 };
+
+export const createGame = async (gameData: {
+  sport: string;
+  location: { address: string; city: string };
+  date: string;
+  time: string;
+  playerNeeded: number;
+}) => {
+  try {
+    const response = await axios.post(`${API_URL}/games/creategame`, gameData, {
+      withCredentials: true,
+    });
+    return response.data;
+  } catch (error) {
+    if (error instanceof AxiosError) {
+      throw new Error(
+        error.response?.data?.message || "Failed to create game."
+      );
+    }
+    throw new Error("An unexpected error occurred.");
+  }
+};
