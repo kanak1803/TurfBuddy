@@ -9,6 +9,7 @@ import JoinGameModal from "./JoinGameModal";
 import { IGame } from "@/types/game";
 import { useAuthStore } from "@/store/authStore";
 import { toast } from "sonner";
+import UpdateGameModal from "./UpdateGameModal";
 
 interface GameCardProps {
   game: IGame;
@@ -22,11 +23,11 @@ const sportImages: Record<string, string> = {
   default: "/images/default.jpg",
 };
 
-export const GameCard: FC<GameCardProps> = ({ game }) => {
+export const GameCard: FC<GameCardProps> = ({ game }: { game: IGame }) => {
   const { isAuthenticated, userId } = useAuthStore();
-  const hasJoined = userId
-    ? game.playerJoined.some((player) => player._id === userId)
-    : false;
+  // const hasJoined = userId
+  //   ? game.playerJoined.some((player) => player._id === userId)
+  //   : false;
   const handleOpenModal = () => {
     if (!isAuthenticated) {
       toast.error("You need to log in to join a game!");
@@ -35,6 +36,13 @@ export const GameCard: FC<GameCardProps> = ({ game }) => {
     setIsModalOpen(true);
   };
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [updateModalOpen, setUpdateModalOpen] = useState(false);
+  const [selectedGame, setSelectedGame] = useState<IGame | null>(null);
+
+  const handleUpdateClick = (game:IGame) => {
+    setSelectedGame(game);
+    setUpdateModalOpen(true);
+  };
   return (
     <Card>
       <Image
@@ -67,14 +75,19 @@ export const GameCard: FC<GameCardProps> = ({ game }) => {
         >
           {game.status}
         </Badge>
-        {/* Join Button (only if game is open) */}
-        {game.status === "open" && (
+        {game.host._id === userId ? (
+          <Button
+            className="mt-2 bg-blue-500 hover:bg-blue-600"
+            onClick={() => handleUpdateClick(game)}
+          >
+            Update Game
+          </Button>
+        ) : (
           <Button
             onClick={handleOpenModal}
-            className="mt-4 w-full"
-            disabled={hasJoined}
+            className="mt-2 bg-green-500 hover:bg-green-600"
           >
-            {hasJoined ? "Already Joined" : "Join Game"}
+            Join Game
           </Button>
         )}
         <JoinGameModal
@@ -82,6 +95,14 @@ export const GameCard: FC<GameCardProps> = ({ game }) => {
           isOpen={isModalOpen}
           onClose={() => setIsModalOpen(false)}
         />
+        {/* Update Game Modal */}
+        {updateModalOpen  &&  (
+          <UpdateGameModal
+            open={updateModalOpen}
+            setOpen={setUpdateModalOpen}
+            game={selectedGame}
+          />
+        )}
       </CardContent>
     </Card>
   );

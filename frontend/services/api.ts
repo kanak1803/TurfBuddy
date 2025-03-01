@@ -51,3 +51,32 @@ export const createGame = async (gameData: {
     throw new Error("An unexpected error occurred.");
   }
 };
+
+export const updateGame = async (
+  gameId: string,
+  updateGame: {
+    sport: string;
+    location: { address: string; city: string };
+    date: string;
+    time: string;
+    playerNeeded: number;
+  }
+) => {
+  try {
+    const response = await axios.patch(
+      `${API_URL}/games/updategame/${gameId}`,
+      updateGame,
+      {
+        withCredentials: true,
+      }
+    );
+    return response.data;
+  } catch (error) {
+    if (error instanceof AxiosError) {
+      throw new Error(
+        error.response?.data?.message || "Failed to update game."
+      );
+    }
+    throw new Error("An unexpected error occurred.");
+  }
+};

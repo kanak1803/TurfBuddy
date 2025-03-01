@@ -18,6 +18,6 @@ router.get("/:id", getSingleGame);
 router.post("/joingame/:id", protectRoute, joinGame);
 router.post("/deletegame/:id", protectRoute, deleteGame);
 router.post("/leavegame/:id", protectRoute, leaveGame);
-router.post("/updategame/:id", protectRoute, updateGame);
+router.patch("/updategame/:id", protectRoute, updateGame);
 
 export default router;

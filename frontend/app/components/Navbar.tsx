@@ -26,7 +26,7 @@ const Navbar = () => {
           {isAuthenticated ? (
             <>
               <Button onClick={() => setOpenModal(true)} variant="default">
-                + Create Game
+                 Create Game
               </Button>
               <CreateGameModal open={openModal} setOpen={setOpenModal} />
               <Button variant="default" asChild>
