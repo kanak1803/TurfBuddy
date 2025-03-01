@@ -90,3 +90,9 @@ body {
     @apply bg-background text-foreground;
   }
 }
+
+input[type="date"]::-webkit-calendar-picker-indicator,
+input[type="time"]::-webkit-calendar-picker-indicator {
+  filter: invert(1); /* Inverts the color, making black icons white */
+  cursor: pointer;
+}
