@@ -54,9 +54,12 @@ export const createGame = async (gameData: {
 
 export const deleteGame = async (gameId: string) => {
   try {
-    const response = await axios.post(`${API_URL}/games/deletegame/${gameId}`, {
-      withCredentials: true,
-    });
+    const response = await axios.delete(
+      `${API_URL}/games/deletegame/${gameId}`,
+      {
+        withCredentials: true,
+      }
+    );
     return response.data;
   } catch (error) {
     if (error instanceof AxiosError) {

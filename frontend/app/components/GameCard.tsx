@@ -27,9 +27,12 @@ const sportImages: Record<string, string> = {
 
 export const GameCard: FC<GameCardProps> = ({ game }) => {
   const { isAuthenticated, userId } = useAuthStore();
+  const isHost = game.host?._id === userId;
   const hasJoined = userId
     ? game.playerJoined.some((player) => player._id === userId)
     : false;
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
   const handleOpenModal = () => {
     if (!isAuthenticated) {
       toast.error("You need to log in to join a game!");
@@ -37,10 +40,9 @@ export const GameCard: FC<GameCardProps> = ({ game }) => {
     }
     setIsModalOpen(true);
   };
-  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const deleteMutation = useMutation({
-    mutationFn: (gameId: string) => deleteGame(gameId),
+    mutationFn: () => deleteGame(game._id),
     onSuccess: () => {
       toast.success("Game deleted successfully");
       queryClient.invalidateQueries({ queryKey: ["games"] });
@@ -56,73 +58,92 @@ export const GameCard: FC<GameCardProps> = ({ game }) => {
       return;
     }
 
-    if (game.host._id !== userId) {
+    if (!isHost) {
       toast.error("You can only delete your own games.");
       return;
     }
 
     if (window.confirm("Are you sure you want to delete this game?")) {
-      deleteMutation.mutate(game._id);
+      deleteMutation.mutate();
     }
   };
 
   return (
-    <Card>
-      <Image
-        src={sportImages[game.sport.toLowerCase()] || sportImages.default}
-        alt={game.sport}
-        width={400}
-        height={200}
-        className="w-full h-48 object-cover rounded-t-lg"
-      />
-      <CardHeader>
-        <CardTitle>{game.sport}</CardTitle>
-      </CardHeader>
-      <CardContent className="text-sm text-muted-foreground">
-        <div>
-          📍 {game.location.city}, {game.location.address}
-        </div>
-        <div className="text-sm">📅 {new Date(game.date).toDateString()}</div>
-        <div className="text-sm">⏰ {game.time}</div>
-        <div className="text-sm">
-          👥 {game.playerJoined.length}/{game.playerNeeded} players joined
-        </div>
-        <Badge
-          className={`mt-2 ${
-            game.status === "open"
-              ? "bg-green-500"
-              : game.status === "full"
-              ? "bg-red-500"
-              : "bg-gray-500"
-          }`}
-        >
-          {game.status}
-        </Badge>
-        {game.host._id === userId && (
-          <Button
-            onClick={handleDeleteGame}
-            className="mt-2 ml-2 bg-red-500 hover:bg-red-600"
-          >
-            Delete Game
-          </Button>
-        )}
-        {/* Join Button (only if game is open) */}
-        {game.status === "open" && (
-          <Button
-            onClick={handleOpenModal}
-            className="mt-4 w-full"
-            disabled={hasJoined}
-          >
-            {hasJoined ? "Already Joined" : "Join Game"}
-          </Button>
-        )}
-
-        <JoinGameModal
-          game={game}
-          isOpen={isModalOpen}
-          onClose={() => setIsModalOpen(false)}
+    <Card className="overflow-hidden rounded-lg shadow-lg border border-gray-200">
+      {/* Game Image */}
+      <div className="relative">
+        <Image
+          src={sportImages[game.sport.toLowerCase()] || sportImages.default}
+          alt={game.sport}
+          width={400}
+          height={200}
+          className="w-full h-56 object-cover rounded-t-lg"
         />
+        <div className="absolute inset-0 bg-black bg-opacity-30 rounded-t-lg"></div>
+      </div>
+
+      {/* Card Content */}
+      <CardHeader className="px-6 pt-4 pb-2">
+        <CardTitle className="text-xl font-semibold text-gray-800">
+          {game.sport}
+        </CardTitle>
+      </CardHeader>
+
+      <CardContent className="px-6 pb-6 text-sm text-gray-600">
+        <div className="grid gap-2">
+          <div className="flex items-center gap-2">
+            📍 <span className="font-medium">{game.location.city}, {game.location.address}</span>
+          </div>
+          <div className="flex items-center gap-2">
+            📅 <span>{new Date(game.date).toDateString()}</span>
+          </div>
+          <div className="flex items-center gap-2">
+            ⏰ <span>{game.time}</span>
+          </div>
+          <div className="flex items-center gap-2">
+            👥 <span>{game.playerJoined.length}/{game.playerNeeded} players joined</span>
+          </div>
+          <Badge
+            className={`mt-2 w-fit px-3 py-1 text-white ${
+              game.status === "open"
+                ? "bg-green-500"
+                : game.status === "full"
+                ? "bg-red-500"
+                : "bg-gray-500"
+            }`}
+          >
+            {game.status}
+          </Badge>
+        </div>
+
+        {/* Buttons */}
+        <div className="mt-4 flex flex-col gap-2">
+          {isHost && (
+            <Button
+              onClick={handleDeleteGame}
+              className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-md"
+            >
+              Delete Game
+            </Button>
+          )}
+          {game.status === "open" && (
+            <Button
+              onClick={handleOpenModal}
+              className=" text-white px-4 py-2 rounded-md"
+              disabled={hasJoined}
+            >
+              {hasJoined ? "Already Joined" : "Join Game"}
+            </Button>
+          )}
+        </div>
       </CardContent>
+
+      {/* Join Modal */}
+      <JoinGameModal
+        game={game}
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+      />
     </Card>
   );
 };

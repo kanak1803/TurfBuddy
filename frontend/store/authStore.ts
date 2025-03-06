@@ -41,6 +41,7 @@ export const useAuthStore = create<AuthState>((set) => ({
         { withCredentials: true }
       );
       set({ isAuthenticated: false, userId: null });
+      window.location.href = "/login";
     } catch (error) {
       console.log("Logout failed", error);
     }

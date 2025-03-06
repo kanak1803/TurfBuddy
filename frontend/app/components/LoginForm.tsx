@@ -32,7 +32,8 @@ const LoginForm = () => {
   useEffect(() => {
     checkAuth();
     if (isAuthenticated) {
-      router.replace("/");
+       router.replace("/");
+      
     }
   }, [isAuthenticated, checkAuth, router]);
 
