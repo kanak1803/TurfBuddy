@@ -9,6 +9,9 @@ import JoinGameModal from "./JoinGameModal";
 import { IGame } from "@/types/game";
 import { useAuthStore } from "@/store/authStore";
 import { toast } from "sonner";
+import { useMutation } from "@tanstack/react-query";
+import { deleteGame } from "@/services/api";
+import { queryClient } from "@/lib/queryClient";
 
 interface GameCardProps {
   game: IGame;
@@ -35,6 +38,34 @@ export const GameCard: FC<GameCardProps> = ({ game }) => {
     setIsModalOpen(true);
   };
   const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const deleteMutation = useMutation({
+    mutationFn: (gameId: string) => deleteGame(gameId),
+    onSuccess: () => {
+      toast.success("Game deleted successfully");
+      queryClient.invalidateQueries({ queryKey: ["games"] });
+    },
+    onError: () => {
+      toast.error("Failed to delete game.");
+    },
+  });
+
+  const handleDeleteGame = () => {
+    if (!isAuthenticated || !userId) {
+      toast.error("Unauthorized: Please log in.");
+      return;
+    }
+
+    if (game.host._id !== userId) {
+      toast.error("You can only delete your own games.");
+      return;
+    }
+
+    if (window.confirm("Are you sure you want to delete this game?")) {
+      deleteMutation.mutate(game._id);
+    }
+  };
+
   return (
     <Card>
       <Image
@@ -67,6 +98,14 @@ export const GameCard: FC<GameCardProps> = ({ game }) => {
         >
           {game.status}
         </Badge>
+        {game.host._id === userId && (
+          <Button
+            onClick={handleDeleteGame}
+            className="mt-2 ml-2 bg-red-500 hover:bg-red-600"
+          >
+            Delete Game
+          </Button>
+        )}
         {/* Join Button (only if game is open) */}
         {game.status === "open" && (
           <Button
@@ -77,6 +116,7 @@ export const GameCard: FC<GameCardProps> = ({ game }) => {
             {hasJoined ? "Already Joined" : "Join Game"}
           </Button>
         )}
+
         <JoinGameModal
           game={game}
           isOpen={isModalOpen}

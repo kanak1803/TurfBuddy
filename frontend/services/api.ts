@@ -51,3 +51,35 @@ export const createGame = async (gameData: {
     throw new Error("An unexpected error occurred.");
   }
 };
+
+export const deleteGame = async (gameId: string) => {
+  try {
+    const response = await axios.post(`${API_URL}/games/deletegame/${gameId}`, {
+      withCredentials: true,
+    });
+    return response.data;
+  } catch (error) {
+    if (error instanceof AxiosError) {
+      throw new Error(
+        error.response?.data?.message || "Failed to delete game."
+      );
+    }
+    throw new Error("An unexpected error occurred.");
+  }
+};
+
+export const getUserProfile = async () => {
+  try {
+    const response = await axios.get(`${API_URL}/users/profile`, {
+      withCredentials: true,
+    });
+    return response.data;
+  } catch (error) {
+    if (error instanceof AxiosError) {
+      throw new Error(
+        error.response?.data?.message || "Failed to get user details."
+      );
+    }
+    throw new Error("Failed to get user details.");
+  }
+};

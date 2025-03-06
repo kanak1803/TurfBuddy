@@ -1,9 +1,15 @@
-export interface IPlayer{
-    _id:string
-    name:string
-    email:string
+export interface IPlayer {
+  _id: string;
+  name: string;
+  email: string;
 }
 
+export interface IHost {
+  contactNumber: string;
+  _id: string;
+  name: string;
+  email: string;
+}
 
 export interface IGame {
   _id: string;
@@ -15,7 +21,7 @@ export interface IGame {
   date: Date;
   time: string;
   playerNeeded: number;
-  host: string;
+  host: IHost;
   hostContact: string;
   playerJoined: IPlayer[];
   status: "open" | "full" | "played";

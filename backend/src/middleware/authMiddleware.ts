@@ -12,6 +12,7 @@ export const protectRoute = async (
   next: NextFunction
 ): Promise<void> => {
   try {
+    console.log("Cookies received:", req.cookies); 
     //extracted token from cookies
     const token = req.cookies.jwt;
     //check if token is there
@@ -29,6 +30,7 @@ export const protectRoute = async (
       return;
     }
     const user = await User.findById(decoded.userId).select("-password");
+    console.log("userinmid",user)
     if (!user) {
       res.status(401).json({ message: "Not authorized, user not found" });
       return;

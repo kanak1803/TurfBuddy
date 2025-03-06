@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import { AuthRequest } from "../middleware/authMiddleware";
 import Game from "../models/Game";
 import mongoose from "mongoose";
+import User from "../models/User";
 
 export const createGame = async (req: AuthRequest, res: Response) => {
   try {
@@ -41,6 +42,12 @@ export const createGame = async (req: AuthRequest, res: Response) => {
       hostContact: req.user.contactNumber,
     });
     await newGame.save();
+    //updated gamehosted in the user model
+    await User.findByIdAndUpdate(
+      req.user._id,
+      { $addToSet: { gameHosted: newGame._id } },
+      { new: true }
+    );
     res
       .status(201)
       .json({ message: "New game added successfully", game: newGame });
@@ -148,6 +155,13 @@ export const joinGame = async (
       game.status = "full";
     }
     await game.save();
+
+    //update gameJoined in the user modal
+    await User.findByIdAndUpdate(
+      userId,
+      { $addToSet: { gameJoined: id } },
+      { new: true }
+    );
     const updatedGame = await Game.findById(id)
       .populate({
         path: "host",

@@ -18,7 +18,11 @@ const userSchema = new mongoose.Schema<IUser>(
     password: { type: String, required: true },
     contactNumber: { type: String, required: true },
     preferredSports: { type: [String], default: [] },
-    profileImage: { type: String, default: "" },
+    profileImage: {
+      type: String,
+      default:
+        "https://res.cloudinary.com/dyp6swbrc/image/upload/v1741163391/avatars/defaultprofile_q11lid.png",
+    },
     gameJoined: [{ type: mongoose.Schema.Types.ObjectId, ref: "Game" }],
     gameHosted: [{ type: mongoose.Schema.Types.ObjectId, ref: "Game" }],
   },

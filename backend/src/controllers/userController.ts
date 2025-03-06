@@ -143,7 +143,12 @@ export const getUserProfile = async (
 ): Promise<void> => {
   try {
     //check middleware to know how profile is fetching
-    res.json(req.user);
+    const user = await User.findById(req.user._id)
+      .select("-password")
+      .populate("gameJoined")
+      .populate("gameHosted");
+
+    res.json(user);
   } catch (error) {
     console.log("server unable to find user", error);
     res.status(500).json({ message: "Server error" });
