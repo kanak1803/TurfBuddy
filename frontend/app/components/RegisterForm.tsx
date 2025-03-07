@@ -16,6 +16,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { useAuthStore } from "@/store/authStore";
 import { useRouter } from "next/navigation";
+import { UserPlus } from "lucide-react";
 
 const formSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 character"),
@@ -99,7 +100,7 @@ const RegisterForm = () => {
               <FormItem>
                 <FormLabel>Contact</FormLabel>
                 <FormControl>
-                  <Input placeholder="911234567891" {...field} />
+                  <Input placeholder="9123548444" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -149,7 +150,7 @@ const RegisterForm = () => {
             className="btn-primary w-full"
             disabled={loading}
           >
-            {loading ? "Registering..." : "Register"}
+            <UserPlus />{loading ? "Registering..." : "Register"}
           </Button>
         </form>
       </Form>

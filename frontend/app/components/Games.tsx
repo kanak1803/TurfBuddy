@@ -14,7 +14,6 @@ const Games = () => {
     queryKey: ["games"],
     queryFn: fetchGames,
   });
-  console.log(games);
   if (isLoading) return <p className="text-center mt-10">Loading games...</p>;
   if (error)
     return (

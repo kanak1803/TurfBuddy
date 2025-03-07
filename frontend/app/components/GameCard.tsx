@@ -12,6 +12,7 @@ import { toast } from "sonner";
 import { useMutation } from "@tanstack/react-query";
 import { deleteGame } from "@/services/api";
 import { queryClient } from "@/lib/queryClient";
+import { DoorOpen, Trash2 } from "lucide-react";
 
 interface GameCardProps {
   game: IGame;
@@ -123,7 +124,7 @@ export const GameCard: FC<GameCardProps> = ({ game }) => {
               onClick={handleDeleteGame}
               className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-md"
             >
-              Delete Game
+              <Trash2 />Delete Game
             </Button>
           )}
           {game.status === "open" && (
@@ -132,7 +133,7 @@ export const GameCard: FC<GameCardProps> = ({ game }) => {
               className=" text-white px-4 py-2 rounded-md"
               disabled={hasJoined}
             >
-              {hasJoined ? "Already Joined" : "Join Game"}
+              <DoorOpen />{hasJoined ? "Already Joined" : "Join Game"}
             </Button>
           )}
         </div>

@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useAuthStore } from "@/store/authStore";
 import CreateGameModal from "./CreateGameModal";
+import { BadgePlus, LogIn, UserPlus, UserRoundPen, Volleyball } from "lucide-react";
 
 const Navbar = () => {
   const { isAuthenticated, checkAuth, logout } = useAuthStore();
@@ -26,26 +27,26 @@ const Navbar = () => {
           {isAuthenticated ? (
             <>
               <Button onClick={() => setOpenModal(true)} variant="default">
-                + Create Game
+                <span><BadgePlus/></span> Create Game
               </Button>
               <CreateGameModal open={openModal} setOpen={setOpenModal} />
               <Button variant="default" asChild>
-                <Link href={"/profile"}>Profile</Link>
+                <Link href={"/profile"}><span><UserRoundPen /></span>Profile</Link>
               </Button>
               <Button variant="destructive" onClick={logout}>
-                Logout
+              <span><LogIn /></span> Logout
               </Button>
             </>
           ) : (
             <>
               <Button variant="default" asChild>
-                <Link href={"/"}>Games</Link>
+                <Link href={"/"}><Volleyball />Games</Link>
               </Button>
               <Button variant="default" asChild>
-                <Link href={"/login"}>Login</Link>
+                <Link href={"/login"}><LogIn />Login</Link>
               </Button>
               <Button variant="default" asChild>
-                <Link href={"/register"}>Signup</Link>
+                <Link href={"/register"}><UserPlus />Register</Link>
               </Button>
             </>
           )}

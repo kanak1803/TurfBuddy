@@ -16,6 +16,7 @@ import { useEffect, useState } from "react";
 import axios, { AxiosError } from "axios";
 import { useRouter } from "next/navigation";
 import { useAuthStore } from "@/store/authStore";
+import { LogOut } from "lucide-react";
 
 const formSchema = z.object({
   email: z.string().email("Invalid email"),
@@ -118,12 +119,13 @@ const LoginForm = () => {
           {success && <p className="text-green-500 text-sm">{success}</p>}
 
           {/* Submit Button */}
+          
           <Button
             type="submit"
             className="btn-primary w-full"
             disabled={loading}
           >
-            {loading ? "Logging in..." : "LogIn"}
+            <LogOut />{loading ? "Logging in..." : "LogIn"}
           </Button>
         </form>
       </Form>
