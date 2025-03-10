@@ -7,12 +7,54 @@ body {
   font-family: "Inter", sans-serif;
 }
 
+/* Improved container for better spacing */
 .container {
-  @apply max-w-7xl mx-auto px-4 sm:px-6 lg:*:px-8;
+  @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
 }
 
+/* Consistent spacing classes */
+.section {
+  @apply py-16 md:py-24;
+}
+
+.section-sm {
+  @apply py-8 md:py-12;
+}
+
+/* Adjusted button spacing */
 .btn-primary {
   @apply bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition;
+}
+
+/* Gap utilities */
+.gap-y-sm {
+  @apply gap-y-4;
+}
+
+.gap-y-md {
+  @apply gap-y-6;
+}
+
+.gap-y-lg {
+  @apply gap-y-8;
+}
+
+/* Margin utilities */
+.mb-section {
+  @apply mb-12 md:mb-16;
+}
+
+.mt-section {
+  @apply mt-12 md:mt-16;
+}
+
+/* Padding utilities */
+.px-content {
+  @apply px-4 sm:px-6 lg:px-8;
+}
+
+.py-content {
+  @apply py-6 md:py-8;
 }
 
 @layer base {
@@ -80,8 +122,6 @@ body {
   }
 }
 
-
-
 @layer base {
   * {
     @apply border-border outline-ring/50;
@@ -91,8 +131,70 @@ body {
   }
 }
 
+/* Spacing for layout components */
+.card {
+  @apply rounded-lg overflow-hidden;
+}
+
+.card-body {
+  @apply p-4 md:p-6;
+}
+
+.card-header {
+  @apply px-4 py-3 md:px-6 md:py-4;
+}
+
+.card-footer {
+  @apply px-4 py-3 md:px-6 md:py-4;
+}
+
+/* Form elements spacing */
+.form-group {
+  @apply mb-4;
+}
+
+.form-label {
+  @apply block mb-1;
+}
+
+/* Table spacing */
+.table-container {
+  @apply overflow-x-auto;
+}
+
+.table {
+  @apply w-full;
+}
+
+.table th,
+.table td {
+  @apply px-4 py-2;
+}
+
 input[type="date"]::-webkit-calendar-picker-indicator,
 input[type="time"]::-webkit-calendar-picker-indicator {
   filter: invert(1); /* Inverts the color, making black icons white */
   cursor: pointer;
+}
+
+/* Responsive spacing */
+.hero-section {
+  @apply py-16 md:py-24 lg:py-32;
+}
+
+.feature-item {
+  @apply p-4 md:p-6;
+}
+
+/* Grid gaps */
+.grid-gap-sm {
+  @apply gap-4;
+}
+
+.grid-gap-md {
+  @apply gap-6;
+}
+
+.grid-gap-lg {
+  @apply gap-8;
 }
