@@ -148,7 +148,7 @@ const RegisterForm = () => {
           {/* Submit Button */}
           <Button
             type="submit"
-            className="btn-primary w-full"
+            className=" w-full"
             disabled={loading}
           >
             <UserPlus />{loading ? "Registering..." : "Register"}

@@ -122,7 +122,7 @@ const LoginForm = () => {
           
           <Button
             type="submit"
-            className="btn-primary w-full"
+            className="w-full"
             disabled={loading}
           >
             <LogOut />{loading ? "Logging in..." : "LogIn"}

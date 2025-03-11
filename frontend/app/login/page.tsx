@@ -1,6 +1,7 @@
 import React from "react";
 import Image from "next/image";
 import LoginForm from "../components/LoginForm";
+import Link from "next/link";
 
 const LoginPage = () => {
   // Sample profile images - in a real app, these would come from your database
@@ -28,13 +29,13 @@ const LoginPage = () => {
 
           <div className="mt-6 text-center text-sm">
             <p className="text-muted-foreground">
-              Don't have an account?{" "}
-              <a
-                href="/signup"
+              Dont have an account?{" "}
+              <Link
+                href="/register"
                 className="font-medium text-primary hover:text-primary/80 transition-colors"
               >
                 Sign up for free
-              </a>
+              </Link>
             </p>
           </div>
         </div>
