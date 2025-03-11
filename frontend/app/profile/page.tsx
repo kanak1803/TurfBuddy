@@ -18,6 +18,7 @@ import {
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
+import Link from "next/link";
 
 const ProfilePage = () => {
   const { isAuthenticated } = useAuthStore();
@@ -244,7 +245,7 @@ const ProfilePage = () => {
                     playing with others who share your interests.
                   </CardDescription>
                   <Button className="mt-4 bg-primary text-primary-foreground hover:bg-primary/90">
-                    Find Games
+                    <Link href={'/'}>Find Games</Link>
                   </Button>
                 </div>
               </CardContent>

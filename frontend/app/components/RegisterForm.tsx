@@ -66,6 +66,7 @@ const RegisterForm = () => {
       console.log(response);
       setSuccess("Registration successful! You can now log in.");
       form.reset();
+      router.push('/login')
     } catch (error) {
       console.log(error);
       setError("Registration failed");
