@@ -1,3 +1,4 @@
+
 import axios, { AxiosError } from "axios";
 
 const API_URL = "http://localhost:5001/api";
@@ -66,6 +67,22 @@ export const deleteGame = async (gameId: string) => {
       throw new Error(
         error.response?.data?.message || "Failed to delete game."
       );
+    }
+    throw new Error("An unexpected error occurred.");
+  }
+};
+
+export const leaveGame = async (gameId: string) => {
+  try {
+    const response = await axios.post(
+      `${API_URL}/games/leavegame/${gameId}`,
+      {}, // empty body
+      { withCredentials: true }
+    );
+    return response.data;
+  } catch (error) {
+    if (error instanceof AxiosError) {
+      throw new Error(error.response?.data?.message || "Failed to leave game.");
     }
     throw new Error("An unexpected error occurred.");
   }

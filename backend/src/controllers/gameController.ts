@@ -258,6 +258,17 @@ export const leaveGame = async (
     }
     await game.save();
 
+    //remove the user from game list in user DB also
+    const user = await User.findByIdAndUpdate(
+      userId,
+      { $pull: { gameJoined: id } },
+      { new: true }
+    );
+    if (!user) {
+      res.status(404).json({ message: "User not found" });
+      return;
+    }
+
     res.status(200).json({ message: "You have left the game", game });
   } catch (error) {
     console.error("Error leaving game:", error);
