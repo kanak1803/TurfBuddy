@@ -188,6 +188,9 @@ export const deleteGame = async (
     const { id } = req.params;
     const userId = req.user._id;
 
+    console.log("Deleting Game - User ID:", userId); // Debugging
+    console.log("Game ID to remove from User DB:", id); // Debugging
+
     if (!mongoose.Types.ObjectId.isValid(id)) {
       res.status(400).json({ message: "Invalid game ID" });
       return;
@@ -210,6 +213,19 @@ export const deleteGame = async (
 
     //delete the game
     await Game.findByIdAndDelete(id);
+
+    //remove game from userDB also
+    const user = await User.findByIdAndUpdate(
+      userId,
+      { $pull: { gameHosted: id } },
+      { new: true }
+    );
+
+    if (!user) {
+      res.status(404).json({ message: "User not found" });
+      return;
+    }
+
     res.status(200).json({ message: "Game deleted successfully" });
   } catch (error) {
     console.error("Error deleting game:", error);
