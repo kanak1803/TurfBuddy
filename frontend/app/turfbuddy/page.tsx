@@ -61,7 +61,7 @@ export default function LandingPage() {
       </div>
 
       {/* Features Section */}
-      <section className="py-16 bg-gray-50">
+      <section className="py-16 bg-gray-800">
         <div className="container mx-auto px-6">
           <h2 className="text-3xl md:text-4xl font-bold text-center mb-12">
             Why Athletes Love TrufBuddy
@@ -69,33 +69,33 @@ export default function LandingPage() {
           
           <div className="grid md:grid-cols-3 gap-8">
             {/* Feature 1 */}
-            <div className="bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition">
+            <div className="bg-gray-200 p-6 rounded-xl shadow-sm hover:shadow-md transition">
               <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mb-4">
                 <MapPin className="text-primary" size={24} />
               </div>
-              <h3 className="text-xl font-semibold mb-2">Find Local Games</h3>
+              <h3 className="text-xl text-gray-600 font-semibold mb-2">Find Local Games</h3>
               <p className="text-gray-600">
                 Discover pickup games happening near you. Filter by sport, skill level, and location.
               </p>
             </div>
             
             {/* Feature 2 */}
-            <div className="bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition">
+            <div className="bg-gray-200 p-6 rounded-xl shadow-sm hover:shadow-md transition">
               <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mb-4">
                 <Users className="text-primary" size={24} />
               </div>
-              <h3 className="text-xl font-semibold mb-2">Meet New Players</h3>
+              <h3 className="text-xl font-semibold mb-2 text-gray-600">Meet New Players</h3>
               <p className="text-gray-600">
                 Connect with like-minded sports enthusiasts and expand your network.
               </p>
             </div>
             
             {/* Feature 3 */}
-            <div className="bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition">
+            <div className="bg-gray-200 p-6 rounded-xl shadow-sm hover:shadow-md transition">
               <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mb-4">
                 <Calendar className="text-primary" size={24} />
               </div>
-              <h3 className="text-xl font-semibold mb-2">Host Your Games</h3>
+              <h3 className="text-xl font-semibold mb-2 text-gray-600">Host Your Games</h3>
               <p className="text-gray-600">
                 Create and manage your own games, invite friends, and track attendees.
               </p>

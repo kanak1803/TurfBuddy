@@ -91,7 +91,7 @@ const Games = () => {
 
             {/* Games Grid */}
             {!isLoading && !error && (
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-4 md:gap-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
                 {filteredGames && filteredGames.length > 0 ? (
                   filteredGames.map((game) => (
                     <GameCard key={game._id} game={game} />

@@ -78,9 +78,9 @@ const Navbar = () => {
                     <Button
                       variant="ghost"
                       size="icon"
-                      className="rounded-full"
+                      className="rounded-full "
                     >
-                      <UserCircle className="h-5 w-5 text-primary" />
+                      <UserCircle className="h-5 w-5 text-primary hover:text-white" />
                     </Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="end" className="w-56">

@@ -1,7 +1,6 @@
 "use client";
 import { useEffect } from "react";
 import { useAuthStore } from "@/store/authStore"; // Zustand store
-// Ensure you have a loader component
 
 import { Loader } from "lucide-react";
 import Games from "./components/Games";
@@ -22,7 +21,6 @@ const HomePage = () => {
     );
   }
 
-  // If the user is not authenticated, show the normal home page
   return (
     <div>
       <Games />

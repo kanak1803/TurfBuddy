@@ -4,7 +4,8 @@ import {
   Dialog,
   DialogContent,
   DialogHeader,
-  DialogTrigger,
+  DialogTitle,
+  DialogFooter,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -17,21 +18,10 @@ import {
 } from "@/components/ui/select";
 import { createGame } from "@/services/api";
 import { useAuthStore } from "@/store/authStore";
-import { DialogTitle } from "@radix-ui/react-dialog";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import React, { useState } from "react";
 import { toast } from "sonner";
-
-// const gameSchema = z.object({
-//   sport: z.string().min(1, "Sport Name is Required"),
-//   address: z.string().min(1, "Address is Required"),
-//   city: z.string().min(1, "City is Required"),
-//   date: z.string().min(1, "Date is required"),
-//   time: z.string().min(1, "Time is required"),
-//   playerNeeded: z.number().min(1, "At least 1 player is needed"),
-// });
-
-// type GameFormValues = z.infer<typeof gameSchema>;
+import { Calendar, MapPin, Users } from "lucide-react";
 
 const CreateGameModal = ({
   open,
@@ -61,7 +51,7 @@ const CreateGameModal = ({
     setFormData({ ...formData, sport: value });
   };
 
-  //create game mutation
+  // Create game mutation
   const mutation = useMutation({
     mutationFn: createGame,
     onSuccess: () => {
@@ -106,101 +96,186 @@ const CreateGameModal = ({
 
   if (!open) return null;
 
+  const sportOptions = [
+    { value: "football", label: "Football", icon: "⚽" },
+    { value: "basketball", label: "Basketball", icon: "🏀" },
+    { value: "cricket", label: "Cricket", icon: "🏏" },
+    { value: "hockey", label: "Hockey", icon: "🏑" },
+    { value: "badminton", label: "Badminton", icon: "🏸" },
+  ];
+
+  // Get tomorrow's date as default
+  const tomorrow = new Date();
+  tomorrow.setDate(tomorrow.getDate() + 1);
+  const tomorrowStr = tomorrow.toISOString().split("T")[0];
+
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>
-        <Button variant={"default"}>Create Game</Button>
-      </DialogTrigger>
-      <DialogContent className="sm:max-2-md">
-        <DialogHeader>
-          <DialogTitle>Create a Game</DialogTitle>
+    <Dialog open={open} onOpenChange={setOpen} >
+      <DialogContent className="sm:max-w-md  p-0 overflow-hidden rounded-lg">
+        <DialogHeader className="px-6 pt-6 pb-4 border-b">
+          <DialogTitle className="text-xl font-semibold flex items-center">
+            Create a New Game
+          </DialogTitle>
+          {/* <Button
+            variant="ghost"
+            size="icon"
+            className="absolute right-4 top-4 text-gray-500 hover:text-gray-700"
+            onClick={() => setOpen(false)}
+          >
+            <X size={18} />
+          </Button> */}
         </DialogHeader>
-        <form onSubmit={handleSubmit} className="space-y-4">
+
+        <form onSubmit={handleSubmit} className="p-6 space-y-5">
           {/* Sport Selection */}
-          <div>
-            <Label>Sport</Label>
+          <div className="space-y-2">
+            <Label htmlFor="sport" className="text-sm font-medium">
+              Sport Type
+            </Label>
             <Select
               onValueChange={handleSportChange}
               value={formData.sport}
               required
             >
-              <SelectTrigger>
-                <SelectValue placeholder="Select Sport" />
+              <SelectTrigger id="sport" className="w-full">
+                <SelectValue placeholder="Select a sport" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="football">Football</SelectItem>
-                <SelectItem value="basketball">Basketball</SelectItem>
-                <SelectItem value="cricket">Cricket</SelectItem>
-                <SelectItem value="hockey">Hockey</SelectItem>
-                <SelectItem value="Badminton">Badminton</SelectItem>
+                {sportOptions.map((sport) => (
+                  <SelectItem key={sport.value} value={sport.value}>
+                    <div className="flex items-center">
+                      <span className="mr-2">{sport.icon}</span>
+                      {sport.label}
+                    </div>
+                  </SelectItem>
+                ))}
               </SelectContent>
             </Select>
           </div>
-          {/* Address */}
-          <div>
-            <Label>Address</Label>
-            <Input
-              type="text"
-              name="address"
-              value={formData.address}
-              onChange={handleChange}
-              required
-            />
-          </div>
-          {/* City */}
-          <div>
-            <Label>City</Label>
-            <Input
-              type="text"
-              name="city"
-              value={formData.city}
-              onChange={handleChange}
-              required
-            />
+
+          {/* Location Section */}
+          <div className="space-y-4">
+            <h3 className="text-sm font-medium flex items-center text-gray-700">
+              <MapPin size={16} className="mr-2 text-primary" />
+              Location Details
+            </h3>
+
+            <div className="grid grid-cols-2 gap-4">
+              {/* City */}
+              <div className="space-y-2">
+                <Label htmlFor="city" className="text-sm font-medium">
+                  City
+                </Label>
+                <Input
+                  id="city"
+                  type="text"
+                  name="city"
+                  value={formData.city}
+                  onChange={handleChange}
+                  placeholder="Enter city"
+                  required
+                  className="w-full"
+                />
+              </div>
+
+              {/* Address */}
+              <div className="space-y-2">
+                <Label htmlFor="address" className="text-sm font-medium">
+                  Venue/Address
+                </Label>
+                <Input
+                  id="address"
+                  type="text"
+                  name="address"
+                  value={formData.address}
+                  onChange={handleChange}
+                  placeholder="Enter venue or address"
+                  required
+                  className="w-full"
+                />
+              </div>
+            </div>
           </div>
 
-          {/* Date */}
-          <div>
-            <Label>Date</Label>
-            <Input
-              type="date"
-              name="date"
-              value={formData.date}
-              onChange={handleChange}
-              required
-            />
-          </div>
+          {/* Time Section */}
+          <div className="space-y-4">
+            <h3 className="text-sm font-medium flex items-center text-gray-700">
+              <Calendar size={16} className="mr-2 text-primary" />
+              When is the game?
+            </h3>
 
-          {/* Time */}
-          <div>
-            <Label>Time</Label>
-            <Input
-              type="time"
-              name="time"
-              value={formData.time}
-              onChange={handleChange}
-              required
-            />
+            <div className="grid grid-cols-2 gap-4">
+              {/* Date */}
+              <div className="space-y-2">
+                <Label htmlFor="date" className="text-sm font-medium">
+                  Date
+                </Label>
+                <Input
+                  id="date"
+                  type="date"
+                  name="date"
+                  min={tomorrowStr}
+                  value={formData.date}
+                  onChange={handleChange}
+                  required
+                  className="w-full"
+                />
+              </div>
+
+              {/* Time */}
+              <div className="space-y-2">
+                <Label htmlFor="time" className="text-sm font-medium">
+                  Time
+                </Label>
+                <Input
+                  id="time"
+                  type="time"
+                  name="time"
+                  value={formData.time}
+                  onChange={handleChange}
+                  required
+                  className="w-full"
+                />
+              </div>
+            </div>
           </div>
 
           {/* Players Needed */}
-          <div>
-            <Label>Players Needed</Label>
+          <div className="space-y-2">
+            <Label
+              htmlFor="playerNeeded"
+              className="text-sm font-medium flex items-center"
+            >
+              <Users size={16} className="mr-2 text-primary" />
+              Players Needed
+            </Label>
             <Input
+              id="playerNeeded"
               type="number"
               name="playerNeeded"
               value={formData.playerNeeded}
               onChange={handleChange}
+              min="2"
+              max="30"
+              placeholder="How many players do you need?"
               required
+              className="w-full"
             />
           </div>
-          <div className="flex justify-end gap-2">
-            <Button variant="outline" onClick={() => setOpen(false)}>
-              Cancel
-            </Button>
-            <Button type="submit">Create Game</Button>
-          </div>
         </form>
+
+        <DialogFooter className="px-6 py-4  border-t flex justify-end gap-2">
+          <Button
+            variant="destructive"
+            onClick={() => setOpen(false)}
+            className="border-gray-300"
+          >
+            Cancel
+          </Button>
+          <Button type="submit" onClick={handleSubmit} className="px-4">
+            Create Game
+          </Button>
+        </DialogFooter>
       </DialogContent>
     </Dialog>
   );

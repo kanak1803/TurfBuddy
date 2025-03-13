@@ -2,61 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-body {
-  @apply bg-gray-50 text-gray-900;
-  font-family: "Inter", sans-serif;
-}
-
-/* Improved container for better spacing */
-.container {
-  @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
-}
-
-/* Consistent spacing classes */
-.section {
-  @apply py-16 md:py-24;
-}
-
-.section-sm {
-  @apply py-8 md:py-12;
-}
-
-/* Adjusted button spacing */
-.btn-primary {
-  @apply bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition;
-}
-
-/* Gap utilities */
-.gap-y-sm {
-  @apply gap-y-4;
-}
-
-.gap-y-md {
-  @apply gap-y-6;
-}
-
-.gap-y-lg {
-  @apply gap-y-8;
-}
-
-/* Margin utilities */
-.mb-section {
-  @apply mb-12 md:mb-16;
-}
-
-.mt-section {
-  @apply mt-12 md:mt-16;
-}
-
-/* Padding utilities */
-.px-content {
-  @apply px-4 sm:px-6 lg:px-8;
-}
-
-.py-content {
-  @apply py-6 md:py-8;
-}
-
 @layer base {
   :root {
     --background: 220 39% 11%; /* Dark Blue Gray */
@@ -71,7 +16,7 @@ body {
     --secondary-foreground: 0 0% 100%;
     --muted: 220 14% 20%;
     --muted-foreground: 220 14% 70%;
-    --accent: 142 71% 40%; /* Green */
+    --accent: 16 100% 50%; /* Green */
     --accent-foreground: 0 0% 100%;
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 98%;
@@ -85,6 +30,7 @@ body {
     --chart-5: 27 87% 67%;
     --radius: 0.5rem;
   }
+
   .dark {
     --background: 220 39% 5%; /* Even Darker Blue Gray */
     --foreground: 0 0% 90%;
@@ -111,90 +57,138 @@ body {
     --chart-4: 280 65% 60%;
     --chart-5: 340 75% 55%;
   }
-}
 
-@layer base {
-  * {
-    @apply border-border;
-  }
-  body {
-    @apply bg-background text-foreground;
-  }
-}
-
-@layer base {
   * {
     @apply border-border outline-ring/50;
   }
+
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground font-sans;
+    font-family: "Inter", sans-serif;
+  }
+
+  /* Fix for date/time input icons in dark mode */
+  input[type="date"]::-webkit-calendar-picker-indicator,
+  input[type="time"]::-webkit-calendar-picker-indicator {
+    filter: invert(1);
+    cursor: pointer;
   }
 }
 
-/* Spacing for layout components */
-.card {
-  @apply rounded-lg overflow-hidden;
+@layer components {
+  /* Layout Components */
+  .container {
+    @apply max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8;
+  }
+
+  /* Button Styles */
+  .btn-primary {
+    @apply bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition-colors;
+  }
+
+  /* Card Components */
+  .card {
+    @apply rounded-lg overflow-hidden border border-border;
+  }
+
+  .card-header {
+    @apply px-4 py-3 md:px-6 md:py-4 border-b border-border;
+  }
+
+  .card-body {
+    @apply p-4 md:p-6;
+  }
+
+  .card-footer {
+    @apply px-4 py-3 md:px-6 md:py-4 border-t border-border;
+  }
+
+  /* Form Components */
+  .form-group {
+    @apply mb-4;
+  }
+
+  .form-label {
+    @apply block mb-1 font-medium;
+  }
+
+  /* Table Components */
+  .table-container {
+    @apply overflow-x-auto rounded-lg border border-border;
+  }
+
+  .table {
+    @apply w-full;
+  }
+
+  .table th {
+    @apply px-4 py-2 text-left font-medium bg-muted/20;
+  }
+
+  .table td {
+    @apply px-4 py-2 border-t border-border;
+  }
 }
 
-.card-body {
-  @apply p-4 md:p-6;
-}
+@layer utilities {
+  /* Spacing Utilities */
+  .section {
+    @apply py-16 md:py-24;
+  }
 
-.card-header {
-  @apply px-4 py-3 md:px-6 md:py-4;
-}
+  .section-sm {
+    @apply py-8 md:py-12;
+  }
 
-.card-footer {
-  @apply px-4 py-3 md:px-6 md:py-4;
-}
+  .hero-section {
+    @apply py-16 md:py-24 lg:py-32;
+  }
 
-/* Form elements spacing */
-.form-group {
-  @apply mb-4;
-}
+  /* Margin Utilities */
+  .mb-section {
+    @apply mb-12 md:mb-16;
+  }
 
-.form-label {
-  @apply block mb-1;
-}
+  .mt-section {
+    @apply mt-12 md:mt-16;
+  }
 
-/* Table spacing */
-.table-container {
-  @apply overflow-x-auto;
-}
+  /* Padding Utilities */
+  .px-content {
+    @apply px-4 sm:px-6 lg:px-8;
+  }
 
-.table {
-  @apply w-full;
-}
+  .py-content {
+    @apply py-6 md:py-8;
+  }
 
-.table th,
-.table td {
-  @apply px-4 py-2;
-}
+  /* Gap Utilities */
+  .gap-y-sm {
+    @apply gap-y-4;
+  }
 
-input[type="date"]::-webkit-calendar-picker-indicator,
-input[type="time"]::-webkit-calendar-picker-indicator {
-  filter: invert(1); /* Inverts the color, making black icons white */
-  cursor: pointer;
-}
+  .gap-y-md {
+    @apply gap-y-6;
+  }
 
-/* Responsive spacing */
-.hero-section {
-  @apply py-16 md:py-24 lg:py-32;
-}
+  .gap-y-lg {
+    @apply gap-y-8;
+  }
 
-.feature-item {
-  @apply p-4 md:p-6;
-}
+  .grid-gap-sm {
+    @apply gap-4;
+  }
 
-/* Grid gaps */
-.grid-gap-sm {
-  @apply gap-4;
-}
+  .grid-gap-md {
+    @apply gap-6;
+  }
 
-.grid-gap-md {
-  @apply gap-6;
-}
+  .grid-gap-lg {
+    @apply gap-8;
+  }
 
-.grid-gap-lg {
-  @apply gap-8;
+  /* Feature Component Spacing */
+  .feature-item {
+    @apply p-4 md:p-6 rounded-lg border border-border;
+  }
 }

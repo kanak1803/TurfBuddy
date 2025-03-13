@@ -2,7 +2,7 @@
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import Image from "next/image";
 import React, { FC, useState } from "react";
 import JoinGameModal from "./JoinGameModal";
@@ -12,7 +12,15 @@ import { toast } from "sonner";
 import { useMutation } from "@tanstack/react-query";
 import { deleteGame, leaveGame } from "@/services/api";
 import { queryClient } from "@/lib/queryClient";
-import { DoorOpen, LogOut, Trash2 } from "lucide-react";
+import {
+  Calendar,
+  Clock,
+  DoorOpen,
+  LogOut,
+  MapPin,
+  Trash2,
+  Users,
+} from "lucide-react";
 
 interface GameCardProps {
   game: IGame;
@@ -33,6 +41,12 @@ export const GameCard: FC<GameCardProps> = ({ game }) => {
     ? game.playerJoined.some((player) => player._id === userId)
     : false;
   const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const formattedDate = new Date(game.date).toLocaleDateString("en-US", {
+    weekday: "short",
+    month: "short",
+    day: "numeric",
+  });
 
   const handleOpenModal = () => {
     if (!isAuthenticated) {
@@ -82,7 +96,7 @@ export const GameCard: FC<GameCardProps> = ({ game }) => {
 
   const handleLeaveGame = () => {
     if (!isAuthenticated || !userId) {
-      toast.error("Unauthorized:Please Logged In");
+      toast.error("Unauthorized: Please log in");
       return;
     }
     if (!hasJoined) {
@@ -94,91 +108,126 @@ export const GameCard: FC<GameCardProps> = ({ game }) => {
     }
   };
 
+  // Calculate progress for player joined
+  const playerProgress = (game.playerJoined.length / game.playerNeeded) * 100;
+
   return (
-    <Card className="overflow-hidden rounded-lg shadow-lg border border-gray-200">
-      {/* Game Image */}
+    <Card className="overflow-hidden rounded-lg shadow-lg border border-gray-200 hover:shadow-xl transition-shadow duration-300">
+    
       <div className="relative">
         <Image
           src={sportImages[game.sport.toLowerCase()] || sportImages.default}
           alt={game.sport}
           width={400}
           height={200}
-          className="w-full h-56 object-cover rounded-t-lg"
+          className="w-full h-48 object-cover"
         />
-        <div className="absolute inset-0 bg-black bg-opacity-30 rounded-t-lg"></div>
+        <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></div>
+
+       
+        <Badge
+          className={`absolute top-3 right-3 px-3 py-1 text-white ${
+            game.status === "open"
+              ? "bg-green-500"
+              : game.status === "full"
+              ? "bg-red-500"
+              : "bg-gray-500"
+          }`}
+        >
+          {game.status.toUpperCase()}
+        </Badge>
+
+        <div className="absolute bottom-3 left-3 right-3">
+          <h2 className="text-2xl font-extrabold text-white drop-shadow-2xl uppercase">
+            {game.sport}
+          </h2>
+          <p className="text-white/90 text-sm font-medium">
+            Host: {game.host?.name || "Anonymous"}
+          </p>
+        </div>
       </div>
 
       {/* Card Content */}
-      <CardHeader className="px-6 pt-4 pb-2">
-        <CardTitle className="text-xl font-semibold text-gray-800">
-          {game.sport}
-        </CardTitle>
-      </CardHeader>
-
-      <CardContent className="px-6 pb-6 text-sm text-gray-600">
-        <div className="grid gap-2">
-          <div className="flex items-center gap-2">
-            📍{" "}
-            <span className="font-medium">
-              {game.location.city}, {game.location.address}
+      <CardContent className="pt-4 px-4">
+        <div className="space-y-3">
+          <div className="flex items-center text-gray-700">
+            <MapPin className="w-4 h-4 mr-2 text-primary" />
+            <span className="font-medium truncate">
+              {game.location.address},{game.location.city}
             </span>
           </div>
-          <div className="flex items-center gap-2">
-            📅 <span>{new Date(game.date).toDateString()}</span>
-          </div>
-          <div className="flex items-center gap-2">
-            ⏰ <span>{game.time}</span>
-          </div>
-          <div className="flex items-center gap-2">
-            👥{" "}
-            <span>
-              {game.playerJoined.length}/{game.playerNeeded} players joined
-            </span>
-          </div>
-          <Badge
-            className={`mt-2 w-fit px-3 py-1 text-white ${
-              game.status === "open"
-                ? "bg-green-500"
-                : game.status === "full"
-                ? "bg-red-500"
-                : "bg-gray-500"
-            }`}
-          >
-            {game.status}
-          </Badge>
-        </div>
 
-        {/* Buttons */}
-        <div className="mt-4 flex flex-col gap-2">
-          {isHost && (
-            <Button
-              onClick={handleDeleteGame}
-              className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-md"
-            >
-              <Trash2 className="mr-2" size={16} />
-              Delete Game
-            </Button>
-          )}
-          {game.status === "open" && !hasJoined && (
-            <Button
-              onClick={handleOpenModal}
-              className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md"
-            >
-              <DoorOpen className="mr-2" size={16} />
-              Join Game
-            </Button>
-          )}
-          {hasJoined && !isHost && (
-            <Button
-              onClick={handleLeaveGame}
-              className="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-md"
-            >
-              <LogOut className="mr-2" size={16} />
-              Leave Game
-            </Button>
-          )}
+          <div className="grid grid-cols-2 gap-2">
+            <div className="flex items-center text-gray-700">
+              <Calendar className="w-4 h-4 mr-2 text-primary" />
+              <span>{formattedDate}</span>
+            </div>
+            <div className="flex items-center text-gray-700">
+              <Clock className="w-4 h-4 mr-2 text-primary" />
+              <span>{game.time}</span>
+            </div>
+          </div>
+
+          <div>
+            <div className="flex items-center justify-between mb-1">
+              <div className="flex items-center text-gray-700">
+                <Users className="w-4 h-4 mr-2 text-primary" />
+                <span>
+                  {game.playerJoined.length}/{game.playerNeeded} players
+                </span>
+              </div>
+              <span className="text-xs font-medium">
+                {Math.round(playerProgress)}% full
+              </span>
+            </div>
+            {/* Player Progress Bar */}
+            <div className="w-full bg-gray-200 rounded-full h-2">
+              <div
+                className={`h-2 rounded-full ${
+                  playerProgress < 50
+                    ? "bg-green-500"
+                    : playerProgress < 80
+                    ? "bg-yellow-500"
+                    : "bg-red-500"
+                }`}
+                style={{ width: `${playerProgress}%` }}
+              ></div>
+            </div>
+          </div>
         </div>
       </CardContent>
+
+      {/* Card Footer with Actions */}
+      <CardFooter className="px-4 pb-4 pt-2 flex flex-col gap-2">
+        {isHost && (
+          <Button
+            onClick={handleDeleteGame}
+            variant="destructive"
+            className="w-full"
+          >
+            <Trash2 className="mr-2" size={16} />
+            Delete Game
+          </Button>
+        )}
+
+        {game.status === "open" && !hasJoined && (
+          <Button onClick={handleOpenModal} className="w-full">
+            <DoorOpen className="mr-2" size={16} />
+            Join Game
+          </Button>
+        )}
+
+        {hasJoined && !isHost && (
+          <Button
+            onClick={handleLeaveGame}
+            variant="outline"
+            className="w-full border-gray-300"
+          >
+            <LogOut className="mr-2" size={16} />
+            Leave Game
+          </Button>
+        )}
+      </CardFooter>
 
       {/* Join Modal */}
       <JoinGameModal
