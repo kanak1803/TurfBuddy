@@ -93,7 +93,7 @@ const JoinGameModal: React.FC<GameModalProps> = ({ game, isOpen, onClose }) => {
             </div>
             <Badge
               variant={
-                isFull ? "destructive" : isHappeningSoon ? "outline" : "success"
+                isFull ? "destructive" : isHappeningSoon ? "outline" : "default"
               }
               className={`${
                 isFull
