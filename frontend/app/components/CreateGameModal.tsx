@@ -21,7 +21,7 @@ import { useAuthStore } from "@/store/authStore";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import React, { useState } from "react";
 import { toast } from "sonner";
-import { Calendar, MapPin, Users } from "lucide-react";
+import { Calendar, MapPin, Users, Volleyball } from "lucide-react";
 
 const CreateGameModal = ({
   open,
@@ -110,7 +110,7 @@ const CreateGameModal = ({
   const tomorrowStr = tomorrow.toISOString().split("T")[0];
 
   return (
-    <Dialog open={open} onOpenChange={setOpen} >
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogContent className="sm:max-w-md  p-0 overflow-hidden rounded-lg">
         <DialogHeader className="px-6 pt-6 pb-4 border-b">
           <DialogTitle className="text-xl font-semibold flex items-center">
@@ -129,9 +129,13 @@ const CreateGameModal = ({
         <form onSubmit={handleSubmit} className="p-6 space-y-5">
           {/* Sport Selection */}
           <div className="space-y-2">
-            <Label htmlFor="sport" className="text-sm font-medium">
-              Sport Type
-            </Label>
+            <div className="flex items-center gap-2">
+              <Volleyball size={16} className="text-primary" />
+              <Label htmlFor="sport" className="text-sm font-medium">
+                Sport Type
+              </Label>
+            </div>
+
             <Select
               onValueChange={handleSportChange}
               value={formData.sport}
@@ -155,7 +159,7 @@ const CreateGameModal = ({
 
           {/* Location Section */}
           <div className="space-y-4">
-            <h3 className="text-sm font-medium flex items-center text-gray-700">
+            <h3 className="text-sm font-medium flex items-center text-white">
               <MapPin size={16} className="mr-2 text-primary" />
               Location Details
             </h3>
@@ -199,7 +203,7 @@ const CreateGameModal = ({
 
           {/* Time Section */}
           <div className="space-y-4">
-            <h3 className="text-sm font-medium flex items-center text-gray-700">
+            <h3 className="text-sm font-medium flex items-center text-white">
               <Calendar size={16} className="mr-2 text-primary" />
               When is the game?
             </h3>
