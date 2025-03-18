@@ -12,7 +12,7 @@ connectDB();
 const app: Application = express();
 
 const corsOptions = {
-  origin: "http://localhost:3000",
+  origin: "https://turf-buddy-one.vercel.app",
   credentials: true,
 };
 
