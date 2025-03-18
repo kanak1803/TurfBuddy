@@ -60,7 +60,7 @@ const RegisterForm = () => {
 
     try {
       const response = await axios.post(
-        "http://localhost:5001/api/users/register",
+        "https://turfbuddy.onrender.com/api/users/register",
         data
       );
       console.log(response);

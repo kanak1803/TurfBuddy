@@ -1,7 +1,6 @@
-
 import axios, { AxiosError } from "axios";
 
-const API_URL = "http://localhost:5001/api";
+const API_URL = "https://turfbuddy.onrender.com/api";
 
 export const fetchGames = async () => {
   const response = await axios.get(`${API_URL}/games`);

@@ -16,7 +16,7 @@ export const useAuthStore = create<AuthState>((set) => ({
   checkAuth: async () => {
     try {
       const response = await axios.get(
-        "http://localhost:5001/api/users/check",
+        "https://turfbuddy.onrender.com/api/users/check",
         {
           withCredentials: true,
         }
@@ -36,7 +36,7 @@ export const useAuthStore = create<AuthState>((set) => ({
   logout: async () => {
     try {
       await axios.post(
-        "http://localhost:5001/api/users/logout",
+        "https://turfbuddy.onrender.com/api/users/logout",
         {},
         { withCredentials: true }
       );
